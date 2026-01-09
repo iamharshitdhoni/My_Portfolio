@@ -6,12 +6,46 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
+  const form = useRef<HTMLFormElement>(null);
+
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  if (!form.current) return;
+
+  emailjs
+    .sendForm(
+      "service_uubqbnk",
+      "template_4r7cs6j",
+      form.current,
+      "VW0Ht6h9hKC56BoHi"
+    )
+    .then(
+      () => {
+        toast({
+          title: "Message Sent!",
+          description: "Thank you for reaching out. I'll get back to you soon.",
+        });
+        form.current?.reset();
+      },
+      (error) => {
+        console.error(error);
+        toast({
+          title: "Error",
+          description: "Failed to send message. Try again later.",
+          variant: "destructive",
+        });
+      }
+    );
+};
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    user_name: '',
+    user_email: '',
     subject: '',
     message: '',
   });
@@ -21,40 +55,26 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    toast({
-      title: 'Message Sent!',
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
-
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setIsSubmitting(false);
-  };
 
   const contactInfo = [
     {
       icon: Mail,
       label: 'Email',
       value: 'harshitdhoni900@gmail.com',
-      href: 'mailto:developer@email.com',
+      href: 'mailto:harshitdhoni900@gmail.com',
     },
     {
       icon: Phone,
       label: 'Phone',
       value: '+91 9027879590',
-      href: 'tel:+91XXXXXXXXXX',
+      href: 'tel:+919027879590',
     },
     {
       icon: MapPin,
       label: 'Khatima,Uttarakhand',
       value: 'India',
-      href: '#',
+      href: 'https://maps.app.goo.gl/yxoekSJVaSRYokZ1A',
     },
   ];
 
@@ -63,7 +83,9 @@ const Contact = () => {
     { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
   ];
 
+
   return (
+    
     <Layout>
       <section className="py-16 md:py-24 relative overflow-hidden">
         {/* Background */}
@@ -153,7 +175,7 @@ const Contact = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <form onSubmit={handleSubmit} className="p-6 md:p-8 rounded-2xl bg-card border border-border">
+              <form ref={form} onSubmit={handleSubmit} className="p-6 md:p-8 rounded-2xl bg-card border border-border">
                 <div className="flex items-center gap-2 mb-6">
                   <MessageSquare className="w-5 h-5 text-primary" />
                   <h3 className="text-xl font-bold text-foreground">Send a Message</h3>
@@ -167,8 +189,8 @@ const Contact = () => {
                       </label>
                       <Input
                         id="name"
-                        name="name"
-                        value={formData.name}
+                        name="user_name"
+                        value={formData.user_name}
                         onChange={handleChange}
                         placeholder="Enter Name"
                         required
@@ -181,9 +203,9 @@ const Contact = () => {
                       </label>
                       <Input
                         id="email"
-                        name="email"
+                        name="user_email"
                         type="email"
-                        value={formData.email}
+                        value={formData.user_email}
                         onChange={handleChange}
                         placeholder="Enter Email"
                         required

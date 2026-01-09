@@ -31,7 +31,7 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight mb-6"
           >
-            Hi, I'm a{' '}
+            Hi, I'm <span className='text-gradient'>Harshit Dhoni</span> a{' '}
             <span className="text-gradient">MERN Stack</span>
             <br />
             Developer
